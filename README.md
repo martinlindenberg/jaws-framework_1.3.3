@@ -1,7 +1,60 @@
 ![JAWS stack javascript aws node.js express auroradb dynamodb lambda](img/jaws_framework_logo_animated_xl.gif)
 
-JAWS V1 (BETA)
+JAWS V1 (BETA) - patched version
 =================================
+
+*Alerting added*
+
+Add to the awsm.json file for each lambda function an alerting area to automatically create alerts for this lambda function on jaws dash
+
+```
+  ...
+  "alerting": {
+    "notificationTopicStageMapping": {
+      "dev": "core-dev",
+      "testing": "core-testing",
+      "staging": "core-staging",
+      "live": "core-live"
+    },
+    "alerts": {
+      "Duration": {
+        "enabled": true,
+        "alarmNamespace": "AWS/Lambda",
+        "description": "Alarm if duration of the importer is above 500ms",
+        "alarmStatisticType": "Maximum",
+        "alarmPeriod": "60",
+        "alarmThreshold": "500",
+        "comparisonOperator": "GreaterThanOrEqualToThreshold",
+        "evaluationPeriod": "1"
+      },
+      "Errors": {
+        "enabled": true,
+        "alarmNamespace": "AWS/Lambda",
+        "description": "Alarm if function returns an error",
+        "alarmStatisticType": "Sum",
+        "alarmPeriod": "60",
+        "alarmThreshold": "1",
+        "comparisonOperator": "GreaterThanOrEqualToThreshold",
+        "evaluationPeriod": "1"
+      },
+      "Throttles": {
+        "enabled": true,
+        "alarmNamespace": "AWS/Lambda",
+        "description": "Alarm if function has more than 5 throttled requests",
+        "alarmStatisticType": "Sum",
+        "alarmPeriod": "60",
+        "alarmThreshold": "5",
+        "comparisonOperator": "GreaterThanOrEqualToThreshold",
+        "evaluationPeriod": "1"
+      }
+    }
+  },
+  ...
+```
+
+notificationTopicStageMapping: define for each stage (created by jaws stage create) the sns topic to be used for notifications
+alerts: add for each required metric an object, each metric can be used once. key = metric name, values = configuration
+
 
 **Daily Status Reports are available in the Road Map at the link below.  Also, miss our breakout session @ RE:INVENT 2015? [Watch it here](https://www.youtube.com/watch?v=D_U6luQ6I90&feature=youtu.be)**
 
